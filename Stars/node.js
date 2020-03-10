@@ -1,12 +1,13 @@
-function node (size,speed,c,pos) {
+function node (size,speed,c,pos,) {
   this.size = size;
   this.c = c;
   this.speed = random(speed/2, speed);
   this.pos = pos;
   this.r = random(size/3,size);
+  this.img = loadImage("https://raw.githubusercontent.com/MrDerman/Backgrounds/master/Star50x.png");
 
   if(this.pos == null) {
-    this.pos = createVector(random(0,windowWidth),0 - size);
+    this.pos = createVector(random(0,windowWidth),0 - size)
   }
 
   this.move = function() {
@@ -14,11 +15,10 @@ function node (size,speed,c,pos) {
   }
 
   this.render = function() {
+    this.c = color(red(this.c),green(this.c),blue(this.c));
     push();
-    noStroke();
-    this.c = color(red(this.c),green(this.c),blue(this.c),255);
-    fill(this.c);
-    ellipse(this.pos.x, this.pos.y, this.r, this.r);
+    tint(this.c);
+    image(this.img,this.pos.x, this.pos.y, this.r, this.r);
     pop();
   }
 
