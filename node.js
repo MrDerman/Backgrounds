@@ -1,13 +1,18 @@
-function node(size, speed, c, img, pos) {
+function node(size, speed, c, img, old, pos) {
   this.size = size;
   this.c = c;
   this.speed = speed;
   this.pos = pos;
   this.img = img;
   this.r = size;
+  this.old = old;
+
+  if (this.old == false) {
+    this.speed = this.size / this.speed / 10;
+  }
 
   if (this.pos == null) {
-    this.pos = createVector(random(0, windowWidth), 0 - size);
+    this.pos = createVector(random(0, windowWidth), 0 - this.size);
   }
 
   this.move = function () {

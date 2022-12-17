@@ -60,10 +60,6 @@ function setup() {
     );
   }
 
-  if (old == false) {
-    nodeSpeed = nodeSize / nodeSpeed / 10;
-  }
-
   for (var i = 0; i < minNodes; i++) {
     pos = createVector(random(0, windowWidth), random(0, windowHeight));
     nodes.push(
@@ -72,6 +68,7 @@ function setup() {
         nodeSpeed,
         colours[floor(random(0, colours.length))],
         img,
+        old,
         pos
       )
     );
@@ -93,7 +90,8 @@ function draw() {
         random(nodeSize / nodeSizeMulti, nodeSize),
         nodeSpeed,
         colours[floor(random(0, colours.length))],
-        img
+        img,
+        old
       )
     );
   }
