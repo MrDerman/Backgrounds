@@ -7,15 +7,15 @@ var nodeSpeed = 4;
 var night = false;
 var greenScreen = false;
 var debug = false;
+var old = false;
+var circes = false;
 var search = window.location.search.replace("?", "");
 var settings = search.split("+");
 var img;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  img = loadImage(
-    "https://raw.githubusercontent.com/MrDerman/Backgrounds/master/star.svg"
-  );
+
   if (settings.length > 0) {
     for (var i = 0; i < settings.length; i++) {
       if (settings[i].includes("size")) {
@@ -30,9 +30,20 @@ function setup() {
         minNodes = settings[i].split("=")[1];
       } else if (settings[i].includes("debug")) {
         debug = settings[i].split("=")[1];
+      } else if (settings[i].includes("old")) {
+        old = settings[i].split("=")[1];
+      } else if (settings[i].includes("circles")) {
+        circes = settings[i].split("=")[1];
       }
     }
   }
+
+  if (circes == false) {
+    img = loadImage(
+      "https://raw.githubusercontent.com/MrDerman/Backgrounds/master/star.svg"
+    );
+  }
+
   minNodes = floor(((width + height / 2) / 100 / 23) * minNodes);
   if (night) {
     colours.push(
@@ -47,6 +58,10 @@ function setup() {
       color(166, 216, 241),
       color(222, 217, 145)
     );
+  }
+
+  if (old == false) {
+    nodeSpeed = nodeSize / nodeSpeed / 10;
   }
 
   for (var i = 0; i < minNodes; i++) {
@@ -71,6 +86,7 @@ function draw() {
   } else {
     background(255, 255, 255);
   }
+
   if (nodes.length < minNodes) {
     nodes.push(
       new node(
@@ -89,6 +105,7 @@ function draw() {
     nodes[i].render();
     nodes[i].move();
   }
+
   if (debug) {
     let fps = frameRate();
     if (fps < 30) {

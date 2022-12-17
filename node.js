@@ -1,7 +1,7 @@
 function node(size, speed, c, img, pos) {
   this.size = size;
   this.c = c;
-  this.speed = size / speed / 10;
+  this.speed = speed;
   this.pos = pos;
   this.img = img;
   this.r = size;
@@ -18,12 +18,16 @@ function node(size, speed, c, img, pos) {
     push();
     noStroke();
     this.c = color(red(this.c), green(this.c), blue(this.c), 255);
-    /*fill(this.c);
-    ellipse(this.pos.x, this.pos.y, this.size, this.size);*/
-    tint(this.c);
-    translate(this.pos.x, this.pos.y);
-    rotate(this.r);
-    image(this.img, 0, 0, this.size, this.size);
+
+    if (this.img == null) {
+      fill(this.c);
+      ellipse(this.pos.x, this.pos.y, this.size, this.size);
+    } else {
+      tint(this.c);
+      translate(this.pos.x, this.pos.y);
+      rotate(this.r);
+      image(this.img, 0, 0, this.size, this.size);
+    }
     pop();
   };
 
