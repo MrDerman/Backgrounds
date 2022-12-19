@@ -1,51 +1,52 @@
 var nodes = [];
 var colours = [];
-var minNodes = 35;
-var nodeSize = 150;
-var nodeSizeMulti = 4;
-var nodeSpeed = 4;
-var night = false;
-var greenScreen = false;
-var debug = false;
-var old = false;
-var circes = false;
-var search = window.location.search.replace("?", "");
-var settings = search.split("+");
 var img;
+var speedChange = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+
+var settings = {
+  ammount: 35,
+  size: 150,
+  scale: 4,
+  speed: 4,
+  night: false,
+  greenScreen: false,
+  debug: false,
+  old: false,
+  circles: false,
+};
+
+var urlParams = new URLSearchParams(window.location.search);
+
+//thanks frank
+urlParams.forEach((value, key) => {
+  try {
+    settings[key] = JSON.parse(value);
+  } catch {
+    settings[key] = value;
+  }
+});
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  if (settings.length > 0) {
-    for (var i = 0; i < settings.length; i++) {
-      if (settings[i].includes("size")) {
-        nodeSize = settings[i].split("=")[1];
-      } else if (settings[i].includes("speed")) {
-        nodeSpeed = settings[i].split("=")[1];
-      } else if (settings[i].includes("night")) {
-        night = settings[i].split("=")[1];
-      } else if (settings[i].includes("greenscreen")) {
-        greenScreen = settings[i].split("=")[1];
-      } else if (settings[i].includes("min")) {
-        minNodes = settings[i].split("=")[1];
-      } else if (settings[i].includes("debug")) {
-        debug = settings[i].split("=")[1];
-      } else if (settings[i].includes("old")) {
-        old = settings[i].split("=")[1];
-      } else if (settings[i].includes("circles")) {
-        circes = settings[i].split("=")[1];
-      }
+  if (!settings["old"]) {
+    if (settings["speed"] <= 10) {
+      settings["speed"] = speedChange[settings["speed"] - 1];
+    } else {
+      settings["speed"] = 1;
     }
   }
 
-  if (circes == false) {
+  if (settings["circles"] == false) {
     img = loadImage(
       "https://raw.githubusercontent.com/MrDerman/Backgrounds/master/star.svg"
     );
   }
 
-  minNodes = floor(((width + height / 2) / 100 / 23) * minNodes);
-  if (night) {
+  settings["ammount"] = floor(
+    ((width + height / 2) / 100 / 23) * settings["ammount"]
+  );
+  if (settings["night"]) {
     colours.push(
       color(144, 96, 139),
       color(69, 141, 184),
@@ -60,15 +61,15 @@ function setup() {
     );
   }
 
-  for (var i = 0; i < minNodes; i++) {
+  for (var i = 0; i < settings["ammount"]; i++) {
     pos = createVector(random(0, windowWidth), random(0, windowHeight));
     nodes.push(
       new node(
-        random(nodeSize / nodeSizeMulti, nodeSize),
-        nodeSpeed,
+        random(settings["size"] / settings["scale"], settings["size"]),
+        settings["speed"],
         colours[floor(random(0, colours.length))],
         img,
-        old,
+        settings["old"],
         pos
       )
     );
@@ -76,22 +77,22 @@ function setup() {
 }
 
 function draw() {
-  if (greenScreen) {
+  if (settings["greenScreen"]) {
     background(0, 255, 0);
-  } else if (night) {
+  } else if (settings["night"]) {
     background(153, 173, 205);
   } else {
     background(255, 255, 255);
   }
 
-  if (nodes.length < minNodes) {
+  if (nodes.length < settings["ammount"]) {
     nodes.push(
       new node(
-        random(nodeSize / nodeSizeMulti, nodeSize),
-        nodeSpeed,
+        random(settings["size"] / settings["scale"], settings["size"]),
+        settings["speed"],
         colours[floor(random(0, colours.length))],
         img,
-        old
+        settings["old"]
       )
     );
   }
@@ -104,7 +105,7 @@ function draw() {
     nodes[i].move();
   }
 
-  if (debug) {
+  if (settings["debug"]) {
     let fps = frameRate();
     if (fps < 30) {
       fill(255, 255, 0);
@@ -113,6 +114,6 @@ function draw() {
     } else {
       fill(0, 255, 0);
     }
-    text("FPS: " + fps.toFixed(2) + " Nodes: " + nodes.length, 10, height - 10);
+    text(`FPS: ${fps.toFixed(2)} Nodes: ${nodes.length}`, 10, height - 10);
   }
 }

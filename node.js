@@ -7,7 +7,7 @@ function node(size, speed, c, img, old, pos) {
   this.r = size;
   this.old = old;
 
-  if (this.old == false) {
+  if (!this.old) {
     this.speed = this.size / this.speed / 10;
   }
 
